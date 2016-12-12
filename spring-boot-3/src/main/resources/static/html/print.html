@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Welcome to Spring-Boot</title>
+</head>
+<body>
+<h1>Welcome to Spring-Boot</h1>
+<iframe width="100%" id="iframe" src="/user/print" frameborder="0" onload="SetWinHeight(this)">
+    </iframe>
+    <script type="application/javascript">
+        setInterval("reload()",1000);
+        function reload() {
+            document.getElementById("iframe").src="/user/print";
+        }
+        function SetWinHeight(obj)
+        {
+            var win=obj;
+            if (document.getElementById)
+            {
+                if (win && !window.opera)
+                {
+                    if (win.contentDocument && win.contentDocument.body.offsetHeight)
+                        win.height = win.contentDocument.body.offsetHeight+5;
+                    else if(win.Document && win.Document.body.scrollHeight)
+                        win.height = win.Document.body.scrollHeight+5;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yhj.mapper.UserMapper" >
+
+    <insert id="insert" parameterType="com.yhj.pojo.User">
+        insert into user(username,password,nickname)
+        values(#{username},#{password},#{nickname})
+        <selectKey resultType="java.lang.Integer">
+            SELECT @@IDENTITY
+        </selectKey>
+    </insert>
+
+    <select id="find" resultType="com.yhj.pojo.User" parameterType="com.yhj.pojo.User">
+        select * from user
+        where 1=1
+        <if test="username != null" >
+            and username = #{username}
+        </if>
+        <if test="password != null" >
+            and password = #{password}
+        </if>
+        <if test="nickname != null" >
+            and nickname = #{nickname}
+        </if>
+        <if test="id != null" >
+            and id = #{id}
+        </if>
+    </select>
+
+    <update id="update" parameterType="com.yhj.pojo.User">
+        update user
+        set id = #{id}
+        <if test="username != null" >
+            , username = #{username}
+        </if>
+        <if test="password != null" >
+            , password = #{password}
+        </if>
+        <if test="nickname != null" >
+            , nickname = #{nickname}
+        </if>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from user where id = #{id}
+    </delete>
+
+
+</mapper>

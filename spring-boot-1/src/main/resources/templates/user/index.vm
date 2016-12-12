@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>用户列表</title>
+    <link href="/css/user.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<h2>用户列表如下，可提供增删改查功能</h2>
+<div>
+    用户编号:<input type="text" id="id">&nbsp;
+    用户名称:<input type="text" id="username"><br/>
+    用户名称:<input type="text" id="password">&nbsp;
+    用户昵称:<input type="text" id="nickname"><br/>
+    <button onclick="search()">查询</button>&nbsp;
+    <button onclick="searchWithJson()">查询JSON版本</button>&nbsp;
+    <button onclick="getDom('insert').click()">新增</button>
+    <a href="#saveWin" style="display: none;" id="insert">insert</a>
+</div>
+<br/>
+<table class="gridtable">
+    <tr>
+        <th>用户编号</th>
+        <th>用户名称</th>
+        <th>用户密码</th>
+        <th>用户昵称</th>
+        <th>操作</th>
+    </tr>
+    #foreach($user in $users)
+        <tr>
+            <td>$user.id</td>
+            <td>$user.username</td>
+            <td>$user.passwordStr</td>
+            <td>$user.nickname</td>
+            <td>
+                <a href="#updateWin"
+                   onclick="showUpdate('$user.id','$user.username','$user.password','$user.nickname')"
+                >修改</a> &nbsp;
+                <a href="#" onclick="del('$user.id')">删除</a>
+            </td>
+        </tr>
+    #end
+</table>
+<div id="updateWin" class="modalDialog">
+    <div>
+        <h3>修改窗口</h3>
+        <a href="#close" title="Close" class="close">X</a>
+        <table class="gridtable">
+            <tr>
+                <td>用户编号</td>
+                <td><span id="u_id"></span></td>
+            </tr>
+            <tr>
+                <td>用户名称</td>
+                <td><input type="text" id="u_username"/></td>
+            </tr>
+            <tr>
+                <td>用户密码</td>
+                <td><input type="text" id="u_password"/></td>
+            </tr>
+            <tr>
+                <td>用户昵称</td>
+                <td><input type="text" id="u_nickname"/></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <button onclick="update()">提交修改</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="saveWin" class="modalDialog">
+    <div>
+        <h3>新增窗口</h3>
+        <a href="#close" title="Close" class="close">X</a>
+        <table class="gridtable">
+            <tr>
+                <td>用户名称</td>
+                <td><input type="text" id="s_username"/></td>
+            </tr>
+            <tr>
+                <td>用户密码</td>
+                <td><input type="text" id="s_password"/></td>
+            </tr>
+            <tr>
+                <td>用户昵称</td>
+                <td><input type="text" id="s_nickname"/></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <button onclick="save()">提交保存</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="application/javascript">
+    function del(id) {
+        window.location.href="/user/delete?id="+id;
+    }
+    function getDom(id) {
+        return document.getElementById(id);
+    }
+    function getUpdatetDom(id) {
+        return getDom("u_"+id);
+    }
+    function getSaveDom(id) {
+        return getDom("s_"+id);
+    }
+    function search(){
+        var id = getDom("id").value;
+        var username = getDom("username").value;
+        var password = getDom("password").value;
+        var nickname = getDom("nickname").value;
+        var url = urlAppend("/user/find?","id",id);
+        url = urlAppend(url,"username",username);
+        url = urlAppend(url,"password",password);
+        url = urlAppend(url,"nickname",nickname);
+        window.location.href=url;
+    }
+    function searchWithJson() {
+        var id = getDom("id").value;
+        var username = getDom("username").value;
+        var password = getDom("password").value;
+        var nickname = getDom("nickname").value;
+        var url = urlAppend("/user/findByJson?","id",id);
+        url = urlAppend(url,"username",username);
+        url = urlAppend(url,"password",password);
+        url = urlAppend(url,"nickname",nickname);
+        window.open(url)
+    }
+    function urlAppend(url,key,value){
+        if(value)
+            return url+key+"="+value+"&";
+        else
+            return url;
+    }
+    function showUpdate(id,username,password,nickname){
+        var idDom = getUpdatetDom("id");
+        var usernameDom = getUpdatetDom("username");
+        var passwordDom = getUpdatetDom("password");
+        var nicknameDom = getUpdatetDom("nickname");
+        idDom.innerHTML=id;
+        usernameDom.value=username;
+        passwordDom.value=password;
+        nicknameDom.value=nickname;
+    }
+    function update() {
+        var idDom = getUpdatetDom("id");
+        var usernameDom = getUpdatetDom("username");
+        var passwordDom = getUpdatetDom("password");
+        var nicknameDom = getUpdatetDom("nickname");
+        var id = idDom.innerHTML;
+        var username = usernameDom.value;
+        var password = passwordDom.value;
+        var nickname = nicknameDom.value;
+        var url = urlAppend("/user/update?","id",id);
+        url = urlAppend(url,"username",username);
+        url = urlAppend(url,"password",password);
+        url = urlAppend(url,"nickname",nickname);
+        window.location.href=url;
+    }
+
+    function save() {
+        var idDom = getSaveDom("id");
+        var usernameDom = getSaveDom("username");
+        var passwordDom = getSaveDom("password");
+        var nicknameDom = getSaveDom("nickname");
+        var username = usernameDom.value;
+        var password = passwordDom.value;
+        var nickname = nicknameDom.value;
+        var url = urlAppend("/user/save?","username",username);
+        url = urlAppend(url,"password",password);
+        url = urlAppend(url,"nickname",nickname);
+        window.location.href=url;
+    }
+</script>
+<hr>
+<a href="/index.html">首页</a>&nbsp;
+<a href="/user/index">用户欢迎页</a>&nbsp;
+<a href="/user/find">用户查询页</a>&nbsp;
+<a href="/html/banner.html">banner</a>&nbsp;
+
+</body>
+</html>
